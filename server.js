@@ -521,7 +521,15 @@ app.get('/api/reports/movement', auth, wrap(async (req, res) => {
 /* ---------------- Static front-end & errors ---------------- */
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', (req, res) => res.status(404).json({ error: 'Not found' }));
-app.use((req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+const fs = require('fs');
+app.use((req, res) => {
+  const filePath = path.join(__dirname, 'public', 'index.html');
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send(`Index file not found at: ${filePath}`);
+  }
+});
 
 app.use((err, req, res, next) => { // eslint-disable-line
   if (err.code === 11000) return res.status(400).json({ error: 'That value already exists.' });
