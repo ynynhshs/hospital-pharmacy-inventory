@@ -521,7 +521,7 @@ app.get('/api/reports/movement', auth, wrap(async (req, res) => {
 /* ---------------- Static front-end & errors ---------------- */
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', (req, res) => res.status(404).json({ error: 'Not found' }));
-app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.use((req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
 app.use((err, req, res, next) => { // eslint-disable-line
   if (err.code === 11000) return res.status(400).json({ error: 'That value already exists.' });
